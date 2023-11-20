@@ -1,7 +1,6 @@
 import cv2
 import time
 import sys
-import logging
 
 # Constants
 CASCADE_FILE = 'car_cascade.xml'
@@ -10,6 +9,7 @@ def load_cascade(cascade_file):
     car_cascade = cv2.CascadeClassifier(cascade_file)
     if car_cascade.empty():
         raise IOError(f"Unable to load the cascade classifier from {cascade_file}")
+    print("Cascade classifier loaded successfully.")
     return car_cascade
 
 def detect_cars(frame, car_cascade):
@@ -28,9 +28,10 @@ def process_video(video_path, car_cascade):
 
     frame_count = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
     fps = cap.get(cv2.CAP_PROP_FPS)
-    print(f"Video Info: {frame_count} frames, {fps} FPS")
+    print(f"Video Info: {frame_count} frames, {fps:.2f} FPS")
 
     start_time = time.time()
+    processed_frames = 0
     while True:
         ret, frame = cap.read()
         if not ret:
@@ -38,9 +39,13 @@ def process_video(video_path, car_cascade):
 
         cars = detect_cars(frame, car_cascade)
         draw_rectangles(frame, cars)
+        processed_frames += 1
+        if processed_frames % 10 == 0:  # Prints a message every 10 frames
+            print(f"Processed {processed_frames}/{frame_count} frames...")
 
     end_time = time.time()
     print(f"Processing Time: {end_time - start_time:.2f} seconds")
+    print("Video processing completed.")
 
     cap.release()
 
