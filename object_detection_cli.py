@@ -4,7 +4,7 @@ import sys
 import logging
 
 # Constants
-CASCADE_FILE = 'cars.xml'
+CASCADE_FILE = 'car_cascade.xml'
 
 def load_cascade(cascade_file):
     car_cascade = cv2.CascadeClassifier(cascade_file)
